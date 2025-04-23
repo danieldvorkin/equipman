@@ -1,0 +1,1 @@
+Rails.application.config.session_store :cookie_store, key: '_equipment_manager_session'
