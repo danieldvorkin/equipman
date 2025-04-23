@@ -8,6 +8,7 @@ const LOGIN_MUTATION = gql`
       user {
         id
         email
+        isAdmin
       }
       token
       errors
@@ -26,10 +27,11 @@ export async function loginAction({ request }) {
       variables: { input: { email, password } },
     });
 
-    const token = data.signInUser.token;
+    const { token, user } = data.signInUser;
 
     if (token) {
       localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
 
       return redirect("/");
     }

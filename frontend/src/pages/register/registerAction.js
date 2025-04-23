@@ -8,6 +8,7 @@ const REGISTER_MUTATION = gql`
       user {
         id
         email
+        isAdmin
       }
       errors
     }

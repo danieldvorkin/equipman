@@ -9,6 +9,8 @@ import Register from './pages/register/Register';
 import Home from './pages/home/Home';
 import { loginAction } from './pages/login/loginAction';
 import { registerAction } from './pages/register/registerAction';
+import ErrorPage from './pages/error/Error';
+import NavBar from './components/navbar';
 
 function App() {
   const router = createBrowserRouter([
@@ -41,7 +43,12 @@ function App() {
           element: <Register />,
           action: registerAction
         }
-      ]
+      ],
+      errorElement: <ErrorPage />
+    },
+    {
+      path: "/admin",
+      element: <><NavBar /><div>Admin</div></>,
     }
   ]);
 
