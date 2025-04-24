@@ -22,6 +22,9 @@ module Types
     field :kits, [Types::KitType], null: true, description: "Fetches all kits" do
       argument :id, ID, required: false, description: "ID of the kit."
     end
+    field :users, [Types::UserType], null: true, description: "Fetches all users" do
+      argument :id, ID, required: false, description: "ID of the user."
+    end
 
     def me
       context[:current_user]
@@ -38,6 +41,20 @@ module Types
         kits.where(id: id)
       else
         kits
+      end
+    end
+
+    def users(id: nil)
+      users = if context[:current_user].admin?
+        User.all
+      else
+        User.where(id: context[:current_user].id)
+      end
+
+      if id
+        users.where(id: id)
+      else
+        users
       end
     end
   end

@@ -30,9 +30,16 @@ const AdminNavbar = () => {
         <Navbar.Collapse id="basic-navbar-nav">
           {isLoggedIn && (
             <Nav className="me-auto">
-              <Nav.Link as={Link} to="/admin/kits">
-                Kits
-              </Nav.Link>
+              {isAdmin && (
+                <Nav.Link as={Link} to="/admin/kits">
+                  Kits
+                </Nav.Link>
+              )}
+              {isAdmin && (
+                <Nav.Link as={Link} to="/admin/users">
+                  Users
+                </Nav.Link>
+              )}
             </Nav>
           )}
           

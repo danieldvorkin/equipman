@@ -6,6 +6,7 @@ import { loader } from './loaders/baseLoader';
 import { loader as homeLoader } from './loaders/homeLoader';
 import { loader as adminLoader } from './loaders/adminLoader';
 import { loader as accountLoader } from './loaders/accountLoader';
+import { loader as usersLoader } from './loaders/usersLoader';
 import Login from './pages/login/Login';
 import Register from './pages/register/Register';
 import Home from './pages/home/Home';
@@ -15,6 +16,7 @@ import ErrorPage from './pages/error/Error';
 import NavBar from './components/navbar';
 import AdminLayout from './adminLayout';
 import Account from './pages/account/Account';
+import Users from './pages/admin/users/Users';
 
 function App() {
   const router = createBrowserRouter([
@@ -59,6 +61,11 @@ function App() {
         {
           path: "kits",
           element: <div>Kits</div>
+        },
+        {
+          path: "users",
+          element: <Users />,
+          loader: usersLoader
         }
       ],
     }

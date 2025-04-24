@@ -1,4 +1,4 @@
-import { defer } from "react-router-dom";
+import { defer, redirect } from "react-router-dom";
 import client from "../ApolloClient";
 import { gql } from "@apollo/client";
 
@@ -19,7 +19,9 @@ export async function loader({ request }) {
     if (response.data.me) {
       return response.data.me;
     } else {
-      throw new Error("User not found");
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      window.location.href = "/login";
     }
   }).catch((error) => {
     console.error("Error fetching user data:", error);
