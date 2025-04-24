@@ -22,8 +22,9 @@ module Types
     field :kits, [Types::KitType], null: true, description: "Fetches all kits" do
       argument :id, ID, required: false, description: "ID of the kit."
     end
-    field :users, [Types::UserType], null: true, description: "Fetches all users" do
-      argument :id, ID, required: false, description: "ID of the user."
+    field :users, Types::UserType.connection_type, null: true, description: "Fetches all users" do
+      argument :page, Integer, required: false, default_value: 1, description: "Page number for pagination."
+      argument :per_page, Integer, required: false, default_value: 10, description: "Number of users per page."
     end
 
     def me
@@ -44,18 +45,16 @@ module Types
       end
     end
 
-    def users(id: nil)
+    def users(page: 1, per_page: 10)
+      offset = (page - 1) * per_page
+      
       users = if context[:current_user].admin?
-        User.all
+        User.all.offset(offset).limit(per_page)
       else
-        User.where(id: context[:current_user].id)
+        User.where(id: context[:current_user].id).offset(offset).limit(per_page)
       end
 
-      if id
-        users.where(id: id)
-      else
-        users
-      end
+      users
     end
   end
 end

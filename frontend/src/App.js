@@ -17,6 +17,7 @@ import NavBar from './components/navbar';
 import AdminLayout from './adminLayout';
 import Account from './pages/account/Account';
 import Users from './pages/admin/users/Users';
+import User from './pages/admin/users/User';
 
 function App() {
   const router = createBrowserRouter([
@@ -66,6 +67,10 @@ function App() {
           path: "users",
           element: <Users />,
           loader: usersLoader
+        },
+        {
+          path: "users/:userId",
+          element: <User />,
         }
       ],
     }

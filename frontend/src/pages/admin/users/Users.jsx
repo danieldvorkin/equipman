@@ -1,14 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { Flex } from "@chakra-ui/react"
+import { Button, Flex } from "@chakra-ui/react"
 import { 
   Dataview, 
   FilterCol, 
   SectionTitle 
 } from "../../styles";
 import Filters from "./filters";
+import Results from "./results";
+import { Await, useLoaderData, useNavigate, useSearchParams } from "react-router-dom";
 
 const Users = () => {
+  const { users } = useLoaderData();
+  const [searchParams] = useSearchParams();
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+  const [page, setPage] = useState(1);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleResize = () => setScreenWidth(window.innerWidth);
@@ -20,11 +26,27 @@ const Users = () => {
     };
   }, []);
 
+  useEffect(() => {
+    const pageParam = searchParams.get("page");
+    if (pageParam) {
+      setPage(parseInt(pageParam));
+    }
+
+    navigate({
+      search: `?page=${page}&pageSize=${searchParams.get("pageSize") || 10}`
+    }, { replace: true });
+  }, [searchParams]);
+
+  useEffect(() => {
+    navigate({
+      search: `?page=${page}&pageSize=${searchParams.get("pageSize") || 10}`
+    }, { replace: true });
+  }, [page]);
+
   const isDesktop = screenWidth > 768;
-  const isMobile = screenWidth <= 768;
 
   const renderFilters = () => (
-    <FilterCol>
+    <FilterCol isMobile={!isDesktop}>
       <SectionTitle>Filters</SectionTitle>
       <Filters />
     </FilterCol>
@@ -33,6 +55,30 @@ const Users = () => {
   const renderUsers = () => (
     <Dataview>
       <SectionTitle>Users</SectionTitle>
+      <React.Suspense fallback={<div>Loading...</div>}>
+        <Await resolve={users}>
+          {(resolvedUsers) => 
+            <>
+              <Results users={resolvedUsers.edges.map((edge) => edge.node)} />
+              <div>
+                <Button 
+                  onClick={() => setPage((prev) => prev - 1)} 
+                  disabled={page === 1}
+                  >
+                    Previous
+                </Button>
+                <Button 
+                  onClick={() => setPage((prev) => prev + 1)} 
+                  disabled={resolvedUsers.edges.length < 10}
+                  >
+                    Next
+                </Button>
+              </div>
+            </>
+          }
+        </Await>
+      </React.Suspense>
+    
     </Dataview>
   );
 
