@@ -4,8 +4,8 @@ import { Outlet } from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
 
 import { Spinner } from "@chakra-ui/react";
-import NavBar from "./components/navbar";
 import styled from "styled-components";
+import AdminNavbar from "./components/adminNavbar";
 
 export const SpinnerContainer = styled.div`
   display: flex;
@@ -14,17 +14,17 @@ export const SpinnerContainer = styled.div`
   height: 100vh;
 `;
 
-const BaseLayout = () => {
-  const { baseLayout } = useLoaderData();
+const AdminLayout = () => {
+  const { adminLayout } = useLoaderData();
 
   return (
     <React.Suspense fallback={<SpinnerContainer><Spinner /></SpinnerContainer>}>
-      <Await resolve={baseLayout}>
-        {({ resolvedBaseLayout }) => (
+      <Await resolve={adminLayout}>
+        {({ resolvedAdminLayout }) => (
           <>
-            <NavBar />
+            <AdminNavbar />
 
-            <Container className="mt-4">
+            <Container>
               <Outlet />
             </Container>
           </>
@@ -34,4 +34,4 @@ const BaseLayout = () => {
   )
 }
 
-export default BaseLayout;
+export default AdminLayout;

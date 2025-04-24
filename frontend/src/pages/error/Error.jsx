@@ -13,7 +13,7 @@ const ErrorContainer = styled.div`
 
 const ErrorPage = () => {
   return (
-    <Container>
+    <>
       <NavBar />
       <ErrorContainer>
         <div style={{ display: "block", margin: "0 auto" }}>
@@ -22,7 +22,7 @@ const ErrorPage = () => {
           <p>We are working to fix this issue. Please try again later.</p>
         </div>
       </ErrorContainer>
-    </Container>
+    </>
   );
 }
 export default ErrorPage;

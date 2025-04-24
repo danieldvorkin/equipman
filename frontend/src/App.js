@@ -4,6 +4,8 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import BaseLayout from './baseLayout';
 import { loader } from './loaders/baseLoader';
 import { loader as homeLoader } from './loaders/homeLoader';
+import { loader as adminLoader } from './loaders/adminLoader';
+import { loader as accountLoader } from './loaders/accountLoader';
 import Login from './pages/login/Login';
 import Register from './pages/register/Register';
 import Home from './pages/home/Home';
@@ -11,6 +13,8 @@ import { loginAction } from './pages/login/loginAction';
 import { registerAction } from './pages/register/registerAction';
 import ErrorPage from './pages/error/Error';
 import NavBar from './components/navbar';
+import AdminLayout from './adminLayout';
+import Account from './pages/account/Account';
 
 function App() {
   const router = createBrowserRouter([
@@ -31,7 +35,8 @@ function App() {
         },
         {
           path: "/account",
-          element: <div>Account</div>
+          element: <Account />,
+          loader: accountLoader
         },
         {
           path: "/login",
@@ -48,7 +53,14 @@ function App() {
     },
     {
       path: "/admin",
-      element: <><NavBar /><div>Admin</div></>,
+      element: <AdminLayout />,
+      loader: adminLoader,
+      children: [
+        {
+          path: "kits",
+          element: <div>Kits</div>
+        }
+      ],
     }
   ]);
 
