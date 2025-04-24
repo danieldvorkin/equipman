@@ -19,9 +19,26 @@ module Types
     end
 
     field :me, Types::UserType, null: true, description: "Fetches the current user"
+    field :kits, [Types::KitType], null: true, description: "Fetches all kits" do
+      argument :id, ID, required: false, description: "ID of the kit."
+    end
 
     def me
       context[:current_user]
+    end
+
+    def kits(id: nil)
+      kits = if context[:current_user].admin?
+        Kit.all
+      else
+        Kit.where(created_by_id: context[:current_user].id)
+      end
+
+      if id
+        kits.where(id: id)
+      else
+        kits
+      end
     end
   end
 end
