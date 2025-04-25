@@ -25,6 +25,7 @@ module Types
     field :users, Types::UserType.connection_type, null: true, description: "Fetches all users" do
       argument :page, Integer, required: false, default_value: 1, description: "Page number for pagination."
       argument :per_page, Integer, required: false, default_value: 10, description: "Number of users per page."
+      argument :filter, Types::UserFilterType, required: false, description: "Filter criteria for users."
     end
 
     def me
@@ -45,13 +46,16 @@ module Types
       end
     end
 
-    def users(page: 1, per_page: 10)
+    def users(page: 1, per_page: 10, filter: nil)
       offset = (page - 1) * per_page
       
       users = if context[:current_user].admin?
-        User.all.offset(offset).limit(per_page)
-      else
-        User.where(id: context[:current_user].id).offset(offset).limit(per_page)
+        users = User.all
+        users = users.where("email ILIKE :search", search: "%#{filter[:email]}%") if filter[:email].present?
+        users = users.where("created_at < :created_before", created_before: filter[:created_before]) if filter[:created_before].present?
+        users = users.where("created_at > :created_after", created_after: filter[:created_after]) if filter[:created_after].present?
+        users = users.where(role: filter[:role]) if filter[:role].present?
+        users.offset(offset).limit(per_page)
       end
 
       users

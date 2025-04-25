@@ -1,7 +1,7 @@
-import { Accordion, Checkbox, Span, Stack } from '@chakra-ui/react';
+import { Accordion, Checkbox, CloseButton, Input, InputGroup, Span, Stack } from '@chakra-ui/react';
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 const ROLES = [
   { value: 'admin', label: 'Admin' },
@@ -16,27 +16,77 @@ const Filters = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [roles, setRoles] = React.useState([]);
+  const [emailSearch, setEmailSearch] = React.useState(searchParams.get('email') || '');
+  const inputRef = React.useRef(null);
 
   const handleClick = (event) => {
     const { value } = event.target;
     const isChecked = event.target.checked;
 
-    const params = new URLSearchParams(searchParams.toString());
     if (isChecked) {
-      params.set('role', value);
+      navigate(`/admin/users?role=${value}`);
     } else {
-      params.delete('role');
+      navigate(`/admin/users`);
     }
-    
-    navigate(`/admin/users?${params.toString()}`);
   }
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (emailSearch) {
+        searchParams.set('email', emailSearch);
+      } else {
+        searchParams.delete('email');
+      }
+      // Reset to page 1 on filter change
+      searchParams.set('page', 1);
+  
+      navigate(`/admin/users?${searchParams.toString()}`);
+    }, 300); // debounce delay in ms
+  
+    return () => clearTimeout(timeout); // cleanup
+  }, [emailSearch]);
 
   useEffect(() => {
     setRoles(searchParams.get('role') ? searchParams.get('role').split(',') : []);
   }, [searchParams]);
 
+  const endElement = emailSearch ? (
+    <CloseButton
+      size="xs"
+      onClick={() => {
+        setEmailSearch("")
+        inputRef.current.focus();
+      }}
+      me="-2"
+    />
+  ) : undefined
+
   return (
     <div>
+      <Accordion.Root collapsible multiple>
+        <Accordion.Item value="search">
+          <Accordion.ItemTrigger>
+            <Span flex="1">Search</Span>
+            <Accordion.ItemIndicator />
+          </Accordion.ItemTrigger>
+          <Accordion.ItemContent>
+            <Accordion.ItemBody>
+              <Stack>
+                <InputGroup endElement={endElement}>
+                  <Input
+                    type="text"
+                    ref={inputRef}
+                    placeholder="Search by email"
+                    value={emailSearch}
+                    onChange={(e) => setEmailSearch(e.target.value)}
+                  />
+                </InputGroup>
+              </Stack>
+            </Accordion.ItemBody>
+          </Accordion.ItemContent>
+        </Accordion.Item>
+      </Accordion.Root>
+
       <Accordion.Root collapsible multiple>
         <Accordion.Item value="roles">
           <Accordion.ItemTrigger>

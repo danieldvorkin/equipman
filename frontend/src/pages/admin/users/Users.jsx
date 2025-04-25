@@ -27,20 +27,14 @@ const Users = () => {
   }, []);
 
   useEffect(() => {
-    const pageParam = searchParams.get("page");
-    if (pageParam) {
-      setPage(parseInt(pageParam));
-    }
+    const currentParams = Object.fromEntries(searchParams.entries());
 
-    navigate({
-      search: `?page=${page}&pageSize=${searchParams.get("pageSize") || 10}`
-    }, { replace: true });
-  }, [searchParams]);
-
-  useEffect(() => {
-    navigate({
-      search: `?page=${page}&pageSize=${searchParams.get("pageSize") || 10}`
-    }, { replace: true });
+    const updatedParams = new URLSearchParams({
+      ...Object.fromEntries(searchParams.entries()),
+      page,
+      pageSize: currentParams.pageSize || 10,
+    });
+    navigate({ search: updatedParams.toString() }, { replace: true });
   }, [page]);
 
   const isDesktop = screenWidth > 768;
@@ -57,24 +51,33 @@ const Users = () => {
       <SectionTitle>Users</SectionTitle>
       <React.Suspense fallback={<div>Loading...</div>}>
         <Await resolve={users}>
-          {(resolvedUsers) => 
-            <>
-              <Results users={resolvedUsers.edges.map((edge) => edge.node)} />
-              <div>
-                <Button 
-                  onClick={() => setPage((prev) => prev - 1)} 
-                  disabled={page === 1}
-                  >
-                    Previous
-                </Button>
-                <Button 
-                  onClick={() => setPage((prev) => prev + 1)} 
-                  disabled={resolvedUsers.edges.length < 10}
-                  >
-                    Next
-                </Button>
-              </div>
-            </>
+          {(resolvedUsers) => {
+            return (
+              <>
+                {resolvedUsers.edges.length === 0 ? (
+                  <div>No users found</div>
+                ) : (
+                  <>
+                    <Results users={resolvedUsers.edges.map((edge) => edge.node)} />
+                    <div>
+                      <Button 
+                        onClick={() => setPage((prev) => prev - 1)} 
+                        disabled={page === 1}
+                        >
+                          Previous
+                      </Button>
+                      <Button 
+                        onClick={() => setPage((prev) => prev + 1)} 
+                        disabled={resolvedUsers.edges.length < 10}
+                        >
+                          Next
+                      </Button>
+                    </div>
+                  </>
+                )}
+              </>
+              )
+            }
           }
         </Await>
       </React.Suspense>
