@@ -7,6 +7,7 @@ import { loader as homeLoader } from './loaders/homeLoader';
 import { loader as adminLoader } from './loaders/adminLoader';
 import { loader as accountLoader } from './loaders/accountLoader';
 import { loader as usersLoader } from './loaders/usersLoader';
+import { loader as kitsLoader } from './loaders/kitsLoader';
 import Login from './pages/login/Login';
 import Register from './pages/register/Register';
 import Home from './pages/home/Home';
@@ -18,6 +19,8 @@ import AdminLayout from './adminLayout';
 import Account from './pages/account/Account';
 import Users from './pages/admin/users/Users';
 import User from './pages/admin/users/User';
+import Kits from './pages/admin/kits/Kits';
+import NewKit from './pages/admin/kits/NewKit';
 
 function App() {
   const router = createBrowserRouter([
@@ -61,7 +64,12 @@ function App() {
       children: [
         {
           path: "kits",
-          element: <div>Kits</div>
+          element: <Kits />,
+          loader: kitsLoader
+        },
+        {
+          path: "kits/new",
+          element: <NewKit />,
         },
         {
           path: "users",
