@@ -316,6 +316,7 @@ Devise.setup do |config|
     jwt.secret = Rails.application.credentials.devise[:jwt_secret_key]
     jwt.dispatch_requests = [['POST', %r{^/graphql$}]]
     jwt.revocation_requests = [['POST', %r{^/graphql$}]]
+    jwt.expiration_time = 1.day.to_i
     jwt.request_formats = {
       graphql: [:json]
     }

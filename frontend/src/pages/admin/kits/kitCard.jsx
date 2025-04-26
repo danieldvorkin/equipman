@@ -1,26 +1,60 @@
 import { 
   Card, 
-  Button 
+  Button, 
+  HStack,
+  Avatar,
+  Stack,
+  Text,
+  Strong,
 } from '@chakra-ui/react';
 import React from 'react';
+import { CustomLink } from '../../styles';
+import styled from 'styled-components';
+
+const CustomCard = styled(Card.Root)`
+  flex-shrink: 0;
+  flex-grow: 1;
+  width: 100%;
+`;
 
 const KitCard = ({ kit }) => {
+  const EditBtnConfig = {
+    to: `/admin/kits/${kit.id}`,
+    variant: 'subtle',
+    colorPalette: 'blue',
+    flex: '1',
+    as: CustomLink,
+  }
   return (
-    <Card.Root variant={"elevated"}>
-      <Card.Header>
-        <Card.Title>{kit.name}</Card.Title>
-        <Card.Description>{kit.description}</Card.Description>
-      </Card.Header>
+    <CustomCard>
       <Card.Body>
-        <p>Version: {kit.version}</p>
-        <p>Active: {kit.active ? 'Yes' : 'No'}</p>
-        <p>Created By: {kit.createdBy.email}</p>
+        <HStack mb="6" gap="3">
+          <Avatar.Root>
+            <Avatar.Fallback name={kit.name} />
+          </Avatar.Root>
+          <Stack gap="0">
+            <Text fontWeight="semibold" textStyle="sm">
+              {kit.name}
+            </Text>
+            <Text color="fg.muted" textStyle="sm">
+              {kit.version} - {kit.active ? 'Active' : 'Inactive'}
+            </Text>
+          </Stack>
+        </HStack>
+        <Card.Description>
+          <Strong color="fg">{kit.name} </Strong>
+          {kit.description}
+        </Card.Description>
       </Card.Body>
       <Card.Footer>
-        <Button>Edit</Button>
-        <Button>Delete</Button>
+        <Button {...EditBtnConfig}>
+          Edit
+        </Button>
+        <Button variant="subtle" colorPalette="red" flex="1">
+          Delete
+        </Button>
       </Card.Footer>
-    </Card.Root>
+    </CustomCard>
   );
 }
 export default KitCard;

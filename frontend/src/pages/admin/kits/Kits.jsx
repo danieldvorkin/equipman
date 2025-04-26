@@ -24,9 +24,9 @@ const Kits = () => {
       <React.Suspense fallback={<div>Loading...</div>}>
         <Await resolve={kits}>
           {(resolvedKits) => 
-            <Grid templateColumns="repeat(3, 1fr)" gap={6}>
+            <Grid templateColumns="repeat(3, 1fr)" gap={2}>
               {resolvedKits.map((kit) => (
-                <GridItem key={kit.id} colSpan={1}>
+                <GridItem key={kit.id} colSpan={1} style={{ display: "flex" }}>
                   <KitCard 
                     kit={kit} 
                   />

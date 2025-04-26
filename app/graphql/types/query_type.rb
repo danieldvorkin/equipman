@@ -33,7 +33,7 @@ module Types
     end
 
     def kits(id: nil)
-      kits = if context[:current_user].admin?
+      kits = if context[:current_user]&.admin?
         Kit.all
       else
         Kit.where(created_by_id: context[:current_user].id)

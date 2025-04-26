@@ -20,7 +20,9 @@ import Account from './pages/account/Account';
 import Users from './pages/admin/users/Users';
 import User from './pages/admin/users/User';
 import Kits from './pages/admin/kits/Kits';
+import Kit from './pages/admin/kits/Kit';
 import NewKit from './pages/admin/kits/NewKit';
+import { addKitAction } from './pages/admin/kits/actions/addKitAction';
 
 function App() {
   const router = createBrowserRouter([
@@ -68,8 +70,13 @@ function App() {
           loader: kitsLoader
         },
         {
+          path: "kits/:kitId",
+          element: <Kit />
+        },
+        {
           path: "kits/new",
           element: <NewKit />,
+          action: addKitAction
         },
         {
           path: "users",

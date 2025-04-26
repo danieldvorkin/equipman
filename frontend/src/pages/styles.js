@@ -1,4 +1,5 @@
 import { Card } from '@chakra-ui/react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 export const CustomCard = styled(Card.Root)`
@@ -25,4 +26,12 @@ export const SectionTitle = styled.h3`
   border-bottom: 1px solid #ccc;
   padding-bottom: 6px;
   margin-bottom: 10px;
+`;
+
+export const CustomLink = styled(Link)`
+  text-decoration: none;
+  color: inherit;
+  &:hover {
+    text-decoration: underline;
+  }
 `;
