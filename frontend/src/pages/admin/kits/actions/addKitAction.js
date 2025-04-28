@@ -34,9 +34,9 @@ export async function addKitAction({ request }) {
 
   const errors = data.upsertKit.errors;
   if (!errors || errors.length === 0) {
-    return redirect("/admin/kits");
+    return { success: true}
   } else {
     console.log(errors);
-    return null;
+    return { success: false, errors };
   }
 };

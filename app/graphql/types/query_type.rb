@@ -21,6 +21,7 @@ module Types
     field :me, Types::UserType, null: true, description: "Fetches the current user"
     field :kits, [Types::KitType], null: true, description: "Fetches all kits" do
       argument :id, ID, required: false, description: "ID of the kit."
+      argument :filter, Types::KitFilterType, required: false, description: "Filter criteria for kits."
     end
     field :users, Types::UserType.connection_type, null: true, description: "Fetches all users" do
       argument :page, Integer, required: false, default_value: 1, description: "Page number for pagination."
@@ -32,18 +33,24 @@ module Types
       context[:current_user]
     end
 
-    def kits(id: nil)
+    def kits(id: nil, filter: nil)
       kits = if context[:current_user]&.admin?
         Kit.all
       else
         Kit.where(created_by_id: context[:current_user].id)
       end
 
-      if id
+      kits = if id
         kits.where(id: id)
       else
         kits
       end
+
+      if filter
+        kits = kits.where("name ILIKE :search", search: "%#{filter[:name]}%") if filter[:name].present?
+      end
+
+      kits
     end
 
     def users(page: 1, per_page: 10, filter: nil)

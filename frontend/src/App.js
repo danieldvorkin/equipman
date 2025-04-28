@@ -67,7 +67,10 @@ function App() {
         {
           path: "kits",
           element: <Kits />,
-          loader: kitsLoader
+          loader: kitsLoader,
+          shouldRevalidate: ({ formAction }) => {
+            return true;
+          },
         },
         {
           path: "kits/:kitId",

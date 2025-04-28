@@ -10,6 +10,10 @@ import {
 import React from 'react';
 import { CustomLink } from '../../styles';
 import styled from 'styled-components';
+import { gql } from '@apollo/client';
+import client from '../../../ApolloClient';
+import { useNavigate } from 'react-router-dom';
+import { GET_KITS } from '../../../loaders/kitsLoader';
 
 const CustomCard = styled(Card.Root)`
   flex-shrink: 0;
@@ -17,7 +21,33 @@ const CustomCard = styled(Card.Root)`
   width: 100%;
 `;
 
+const DELETE_MUTATION = gql`
+  mutation deleteKit($input: DeleteKitInput!){
+    deleteKit(input: $input){
+      errors
+    }
+  }
+`;
+
 const KitCard = ({ kit }) => {
+  const navigate = useNavigate();
+
+  const handleDelete = async () => {
+    const response = await client.mutate({
+      mutation: DELETE_MUTATION,
+      variables: {
+        input: {
+          id: kit.id,
+        },
+      },
+    });
+    if (response.data.deleteKit.errors.length > 0) {
+      console.error('Error deleting kit:', response.data.deleteKit.errors);
+    } else {
+      navigate('/admin/kits');
+    }
+  }
+
   const EditBtnConfig = {
     to: `/admin/kits/${kit.id}`,
     variant: 'subtle',
@@ -25,6 +55,14 @@ const KitCard = ({ kit }) => {
     flex: '1',
     as: CustomLink,
   }
+
+  const DeleteBtnConfig = {
+    variant: 'subtle',
+    colorPalette: 'red',
+    flex: '1',
+    onClick: handleDelete,
+  }
+
   return (
     <CustomCard>
       <Card.Body>
@@ -50,7 +88,7 @@ const KitCard = ({ kit }) => {
         <Button {...EditBtnConfig}>
           Edit
         </Button>
-        <Button variant="subtle" colorPalette="red" flex="1">
+        <Button {...DeleteBtnConfig}>
           Delete
         </Button>
       </Card.Footer>

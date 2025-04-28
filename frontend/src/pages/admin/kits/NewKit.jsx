@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import BreadCrumbs from "../../../components/BreadCrumbs";
 import { Flex, Input, Button, Container, Checkbox, ButtonGroup } from '@chakra-ui/react';
-import { Form } from 'react-router-dom';
+import { Form, useFetcher, useNavigate } from 'react-router-dom';
 
 const FlexConfig = {
   direction: 'column',
@@ -40,6 +40,8 @@ const FormCheckbox = ({ name, placeholder, required, defaultValue }) => {
 }
 
 const NewKit = () => {
+  const fetcher = useFetcher();
+  const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("user"));
   const inputFields = [
     { element: <FormInput name="name" type="text" placeholder="Name" required={true} /> },
@@ -49,11 +51,17 @@ const NewKit = () => {
     { element: <input type="hidden" name="createdById" value={user.id} /> },
   ];
 
+  useEffect(() => {
+    if (fetcher.data?.success) {
+      navigate("/admin/kits");
+    }
+  }, [fetcher.data]);
+
   return (
     <Container fluid style={{ marginTop: 20 }}>
       <BreadCrumbs />
       <h1>Create a New Kit</h1>
-      <Form method="post">
+      <fetcher.Form method="post" action="/admin/kits/new">
         <Flex {...FlexConfig}>
           {inputFields.map((field, index) => (
             field.element
@@ -68,7 +76,7 @@ const NewKit = () => {
           </Button>
           <Button type="submit">Create Kit</Button>
         </ButtonGroup>
-      </Form>
+      </fetcher.Form>
     </Container>
   );
 }

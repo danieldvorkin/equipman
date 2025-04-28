@@ -2,6 +2,7 @@ import { Accordion, Checkbox, CloseButton, Input, InputGroup, Span, Stack } from
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { getEndElement } from '../../util';
 
 const ROLES = [
   { value: 'admin', label: 'Admin' },
@@ -50,17 +51,6 @@ const Filters = () => {
     setRoles(searchParams.get('role') ? searchParams.get('role').split(',') : []);
   }, [searchParams]);
 
-  const endElement = emailSearch ? (
-    <CloseButton
-      size="xs"
-      onClick={() => {
-        setEmailSearch("")
-        inputRef.current.focus();
-      }}
-      me="-2"
-    />
-  ) : undefined
-
   return (
     <div>
       <Accordion.Root collapsible multiple>
@@ -72,7 +62,7 @@ const Filters = () => {
           <Accordion.ItemContent>
             <Accordion.ItemBody>
               <Stack>
-                <InputGroup endElement={endElement}>
+                <InputGroup endElement={getEndElement(emailSearch, setEmailSearch, inputRef)}>
                   <Input
                     type="text"
                     ref={inputRef}

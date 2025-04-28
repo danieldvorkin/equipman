@@ -2,9 +2,9 @@ import { defer, redirect } from "react-router-dom";
 import client from "../ApolloClient";
 import { gql } from "@apollo/client";
 
-const GET_KITS = gql`
-  query {
-    kits {
+export const GET_KITS = gql`
+  query AllKits($filter: KitFilter) {
+    kits(filter: $filter) {
       id
       name
       description
@@ -24,8 +24,17 @@ export async function loader({ request }) {
     return redirect("/login");
   }
 
+  const url = new URL(request.url);
+  const name = url.searchParams.get("name") || "";
+  
   const kits = client.query({
     query: GET_KITS,
+    fetchPolicy: 'network-only',
+    variables: {
+      filter: {
+        name: name || ""
+      }
+    },
   }).then((response) => {
     if (response.errors) {
       throw new Error("Failed to fetch kits");
