@@ -41,15 +41,17 @@ const KitCard = ({ kit }) => {
         },
       },
     });
+
     if (response.data.deleteKit.errors.length > 0) {
       console.error('Error deleting kit:', response.data.deleteKit.errors);
     } else {
-      navigate('/admin/kits');
+      const currentUrl = window.location.pathname;
+      navigate(`${currentUrl.includes('/admin') ? '/admin/kits' : '/kits'}`);
     }
   }
 
   const EditBtnConfig = {
-    to: `/admin/kits/${kit.id}`,
+    to: `${window.location.pathname.includes("admin") ? '/admin' : ''}/kits/${kit.id}`,
     variant: 'subtle',
     colorPalette: 'blue',
     flex: '1',

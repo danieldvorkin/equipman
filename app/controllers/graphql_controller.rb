@@ -20,12 +20,6 @@ class GraphqlController < ApplicationController
     handle_error_in_development(e)
   end
 
-  def context
-    {
-      current_user: current_user
-    }
-  end
-
   private
 
   def current_user

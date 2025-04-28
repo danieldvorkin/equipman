@@ -42,6 +42,14 @@ function App() {
           loader: homeLoader
         },
         {
+          path: "/kits",
+          element: <Kits />,
+          loader: kitsLoader,
+          shouldRevalidate: () => {
+            return true;
+          },
+        },
+        {
           path: "/account",
           element: <Account />,
           loader: accountLoader
@@ -68,7 +76,7 @@ function App() {
           path: "kits",
           element: <Kits />,
           loader: kitsLoader,
-          shouldRevalidate: ({ formAction }) => {
+          shouldRevalidate: () => {
             return true;
           },
         },

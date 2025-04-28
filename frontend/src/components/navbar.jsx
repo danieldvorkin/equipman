@@ -32,6 +32,9 @@ const NavBar = () => {
             <Nav.Link as={Link} to="/home">
               Home
             </Nav.Link>
+            <Nav.Link as={Link} to="/kits">
+              Kits
+            </Nav.Link>
           </Nav>
           
           {/* NOT LOGGED IN */}
