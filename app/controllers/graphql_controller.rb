@@ -23,13 +23,18 @@ class GraphqlController < ApplicationController
   private
 
   def current_user
+    # If no Authorization header is present, return nil without error
     return nil unless request.headers['Authorization'].present?
   
     token = request.headers['Authorization'].split(' ').last
-    decoded = Warden::JWTAuth::TokenDecoder.new.call(token)
-    User.find(decoded['sub'])
-  rescue
-    nil
+    begin
+      decoded = Warden::JWTAuth::TokenDecoder.new.call(token)
+      User.find(decoded['sub'])
+    rescue JWT::DecodeError, ActiveRecord::RecordNotFound => e
+      # Log the error but return nil
+      Rails.logger.warn("Authentication error: #{e.message}")
+      nil
+    end
   end
 
   # Handle variables in form data, JSON body, or a blank value

@@ -30,10 +30,23 @@ module Types
     end
 
     def me
+      if context[:current_user].nil?
+        raise GraphQL::ExecutionError.new(
+          "You need to be authenticated to perform this action",
+          extensions: { code: "UNAUTHENTICATED" }
+        )
+      end
       context[:current_user]
     end
 
     def kits(id: nil, filter: nil)
+      if context[:current_user].nil?
+        raise GraphQL::ExecutionError.new(
+          "You need to be authenticated to perform this action",
+          extensions: { code: "UNAUTHENTICATED" }
+        )
+      end
+
       kits = if context[:current_user]&.admin?
         Kit.all
       else
@@ -54,6 +67,13 @@ module Types
     end
 
     def users(page: 1, per_page: 10, filter: nil)
+      if context[:current_user].nil?
+        raise GraphQL::ExecutionError.new(
+          "You need to be authenticated to perform this action",
+          extensions: { code: "UNAUTHENTICATED" }
+        )
+      end
+
       offset = (page - 1) * per_page
       
       users = if context[:current_user].admin?

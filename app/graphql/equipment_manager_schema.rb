@@ -31,6 +31,14 @@ class EquipmentManagerSchema < GraphQL::Schema
 
   # Relay-style Object Identification:
 
+  def self.unauthorized_object(error)
+    # Return a graceful error message instead of raising an exception
+    raise GraphQL::ExecutionError.new(
+      "You need to be authenticated to access #{error.type.graphql_name}",
+      extensions: { code: "UNAUTHENTICATED" }
+    )
+  end
+
   # Return a string UUID for `object`
   def self.id_from_object(object, type_definition, query_ctx)
     # For example, use Rails' GlobalID library (https://github.com/rails/globalid):
