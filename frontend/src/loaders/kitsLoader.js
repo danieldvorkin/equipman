@@ -10,6 +10,13 @@ export const GET_KITS = gql`
       description
       version
       active
+      kitItems {
+        id
+        item {
+          id
+          name
+        }
+      }
       createdBy {
         id
         email

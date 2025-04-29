@@ -12,7 +12,7 @@ import { CustomLink } from '../../styles';
 import styled from 'styled-components';
 import { gql } from '@apollo/client';
 import client from '../../../ApolloClient';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { GET_KITS } from '../../../loaders/kitsLoader';
 
 const CustomCard = styled(Card.Root)`
@@ -73,11 +73,11 @@ const KitCard = ({ kit }) => {
             <Avatar.Fallback name={kit.name} />
           </Avatar.Root>
           <Stack gap="0">
-            <Text fontWeight="semibold" textStyle="sm">
+            <Text fontWeight="semibold" textStyle="sm" as={Link} to={`${window.location.pathname.includes("admin") ? '/admin' : ''}/kits/${kit.id}`}>
               {kit.name}
             </Text>
-            <Text color="fg.muted" textStyle="sm">
-              {kit.version} - {kit.active ? 'Active' : 'Inactive'}
+            <Text color="fg.muted" textStyle="sm" style={{marginBottom: 0}}>
+              {kit.version}v | {kit.active ? 'Active' : 'Inactive'}
             </Text>
           </Stack>
         </HStack>
