@@ -10,6 +10,22 @@ export const GET_KITS = gql`
       description
       version
       active
+      createdBy {
+        id
+        email
+      }
+    }
+  }
+`;
+
+export const GET_KIT = gql`
+  query GetKit($id: ID!) {
+    kits(id: $id) {
+      id
+      name
+      description
+      version
+      active
       kitItems {
         id
         item {
@@ -53,7 +69,41 @@ export async function loader({ request }) {
     throw new Error("Failed to fetch kits");
   });
 
-  return defer ({
+  return defer({
     kits
+  });
+}
+
+// New loader for the kit detail page
+export async function kitDetailLoader({ params }) {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    return redirect("/login");
+  }
+  const kitId = params.kitId;
+
+  if (!kitId) {
+    console.error("kitId is undefined");
+    throw new Error("Kit ID is required to fetch kit details");
+  }
+  
+  const kitPromise = client.query({
+    query: GET_KIT,
+    variables: {
+      id: kitId,
+    },
+    fetchPolicy: 'network-only',
+  }).then((response) => {
+    if (response.errors) {
+      throw new Error("Failed to fetch kit details");
+    }
+    return response.data.kits[0];
+  }).catch((error) => {
+    console.error("Error fetching kit details:", error);
+    throw new Error("Failed to fetch kit details");
+  });
+
+  return defer({
+    kit: kitPromise
   });
 }

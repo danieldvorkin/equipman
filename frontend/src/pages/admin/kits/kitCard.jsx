@@ -13,7 +13,6 @@ import styled from 'styled-components';
 import { gql } from '@apollo/client';
 import client from '../../../ApolloClient';
 import { Link, useNavigate } from 'react-router-dom';
-import { GET_KITS } from '../../../loaders/kitsLoader';
 
 const CustomCard = styled(Card.Root)`
   flex-shrink: 0;

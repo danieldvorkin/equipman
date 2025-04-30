@@ -1,4 +1,4 @@
-import { Button, CloseButton, Flex, Grid, GridItem, Input, InputGroup } from "@chakra-ui/react";
+import { Button, Flex, Grid, GridItem, Input, InputGroup } from "@chakra-ui/react";
 import React, { useEffect, useRef } from "react";
 import { Await, Link, useLoaderData, useSearchParams } from "react-router-dom";
 import KitCard from "./kitCard";

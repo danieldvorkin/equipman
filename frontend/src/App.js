@@ -7,14 +7,13 @@ import { loader as homeLoader } from './loaders/homeLoader';
 import { loader as adminLoader } from './loaders/adminLoader';
 import { loader as accountLoader } from './loaders/accountLoader';
 import { loader as usersLoader } from './loaders/usersLoader';
-import { loader as kitsLoader } from './loaders/kitsLoader';
+import { kitDetailLoader, loader as kitsLoader } from './loaders/kitsLoader';
 import Login from './pages/login/Login';
 import Register from './pages/register/Register';
 import Home from './pages/home/Home';
 import { loginAction } from './pages/login/loginAction';
 import { registerAction } from './pages/register/registerAction';
 import ErrorPage from './pages/error/Error';
-import NavBar from './components/navbar';
 import AdminLayout from './adminLayout';
 import Account from './pages/account/Account';
 import Users from './pages/admin/users/Users';
@@ -23,6 +22,7 @@ import Kits from './pages/admin/kits/Kits';
 import Kit from './pages/admin/kits/Kit';
 import NewKit from './pages/admin/kits/NewKit';
 import { addKitAction } from './pages/admin/kits/actions/addKitAction';
+import KitShow from './pages/kits/KitShow';
 
 function App() {
   const router = createBrowserRouter([
@@ -42,12 +42,17 @@ function App() {
           loader: homeLoader
         },
         {
+          path: "/kits/:kitId",
+          element: <KitShow />,
+          loader: kitDetailLoader,
+        },
+        {
           path: "/kits",
           element: <Kits />,
           loader: kitsLoader,
           shouldRevalidate: () => {
             return true;
-          },
+          }
         },
         {
           path: "/account",
